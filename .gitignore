@@ -3,5 +3,6 @@
 *.cpp
 *.h
 *.pyproject*
+*.data
 model_places_flower_simple_2.h5
 __pycache__/*
