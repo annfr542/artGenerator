@@ -45,6 +45,13 @@ def preprocess_image(pixmap):
     b.setsize(pixmap.height() * pixmap.width() * channels_count)
     return np.frombuffer(b, np.uint8).reshape((pixmap.height(), pixmap.width(), channels_count))
 
+def wrap_text(text):
+    if len(text) > 25:
+        wt = text[0:20]
+        wt += "..."
+        return wt
+    return text
+
 class QtGui(QMainWindow):
     def __init__(self):
         super(QtGui, self).__init__()
@@ -71,11 +78,10 @@ class QtGui(QMainWindow):
         self.epoch_min = 1
         self.epoch_max = 5
 
-        self.model_dict = {
-            "Slug": "model3.h5",
-            "Buildings": "model_places.h5",
-            "Blobs": "model_hybrid.h5",
-            "Lighthouse": "model_places_flower_simple.h5"
+        self.model_dict = { "Slug": "model3.h5", 
+                            "Buildings": "model_places.h5", 
+                            "Blobs": "model_hybrid.h5",
+                            "Lighthouse": "model_places_flower_simple.h5" 
         }
         self.models = ["Slug", "Buildings", "Blobs", "Lighthouse"]
         input_types = ["Noise", "Image"]
@@ -155,7 +161,7 @@ class QtGui(QMainWindow):
         filenames = QFileDialog.getOpenFileName(self, 'Choose image', root_path, "Image files (*.jpg *.png)")
         if filenames[0]:
             self.image_path = filenames[0]
-            self.imageChooser.setText(self.image_path)
+            self.imageChooser.setText(wrap_text(self.image_path))
             self.load_image()
             return 1
 
