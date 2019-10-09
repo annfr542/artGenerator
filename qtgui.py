@@ -219,7 +219,7 @@ class QtGui(QMainWindow):
         dfile.write("Iters: %s\n" % self.r_iters)
         dfile.write("Step size: %s\n" % self.r_step)
         dfile.write("Scale: %s\n" % self.r_scale)
-        dfile.write("Epochs: %s\n" % self.r_epochs)
+        dfile.write("Octaves: %s\n" % self.r_octaves)
         dfile.write("Time: %ss\n" % self.elapsed_time)
         dfile.close()
 
@@ -227,7 +227,7 @@ class QtGui(QMainWindow):
         self.r_iters = self.iter_min + (self.iter_max - self.iter_min) * self.iterSlider.value() / 99
         self.r_step = self.step_min + (self.step_max - self.step_min) * self.stepSlider.value() / 99
         self.r_scale = self.scale_min + (self.scale_max - self.scale_min) * self.scaleSlider.value() / 99
-        self.r_epochs = int(self.epoch_min + (self.epoch_max - self.epoch_min) * self.epochSlider.value() / 99)
+        self.r_octaves = int(self.epoch_min + (self.epoch_max - self.epoch_min) * self.epochSlider.value() / 99)
         self.r_model = self.model_dict[str(self.modelCombo.currentText())]
 
         self.launchButton.setText("Running...")
@@ -240,7 +240,7 @@ class QtGui(QMainWindow):
         self.saveButton.setEnabled(0)
         QApplication.setOverrideCursor(Qt.WaitCursor)
         start = time.time()
-        generate(int(self.r_iters), self.r_step, self.r_scale, self.r_model, self.data_path, self, self.r_epochs)
+        generate(int(self.r_iters), self.r_step, self.r_scale, self.r_model, self.data_path, self, self.r_octaves)
         end = time.time()
         self.elapsed_time = end - start
         self.iterSlider.setEnabled(1)

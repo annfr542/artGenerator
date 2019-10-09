@@ -53,13 +53,13 @@ def deepdream(model, img, step_size):
 
     return loss, img
 
-def run_deep_dream_simple(model, img, gui, steps, step_size, epoch, tot_epochs):
+def run_deep_dream_simple(model, img, gui, steps, step_size, octaves, tot_octaves):
     img = tf.keras.applications.inception_v3.preprocess_input(img)
 
     for step in range(steps):
         loss, img = deepdream(model, img, step_size)
 
-        gui.set_output("Running: Epoch {}/{} Step {}, loss {}".format(epoch+1, tot_epochs, step+1, loss))
+        gui.set_output("Running: Octave {}/{} Step {}, Loss {}".format(octaves+1, tot_octaves, step+1, loss))
         gui.show_numpy_image(deprocess(img).numpy())
 
     result = deprocess(img)
@@ -79,7 +79,7 @@ def load_image(path):
     img = np.array(img)
     return img
 
-def generate(iters, step, scale, model, image, gui, epochs):
+def generate(iters, step, scale, model, image, gui, octaves):
     base_model = load_model(model)
     original_img = load_image(image)
 
@@ -91,10 +91,10 @@ def generate(iters, step, scale, model, image, gui, epochs):
     img = tf.constant(np.array(original_img))
     base_shape = tf.cast(tf.shape(img)[:-1], tf.float32)
 
-    for n in range(epochs):
+    for n in range(octaves):
         new_shape = tf.cast(base_shape*(scale**n), tf.int32)
         img = tf.image.resize(img, new_shape).numpy()
-        img = run_deep_dream_simple(model=dream_model, img=img, gui=gui, steps=iters, step_size=step, epoch=n, tot_epochs=epochs)
+        img = run_deep_dream_simple(model=dream_model, img=img, gui=gui, steps=iters, step_size=step, octaves=n, tot_octaves=octaves)
 
     gui.set_output("Done")
     gui.show_numpy_image(img.numpy())
