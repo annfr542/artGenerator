@@ -220,6 +220,7 @@ class QtGui(QMainWindow):
         dfile.write("Step size: %s\n" % self.r_step)
         dfile.write("Scale: %s\n" % self.r_scale)
         dfile.write("Epochs: %s\n" % self.r_epochs)
+        dfile.write("Time: %ss\n" % self.elapsed_time)
         dfile.close()
 
     def run(self):
@@ -238,7 +239,10 @@ class QtGui(QMainWindow):
         self.imageChooser.setEnabled(0)
         self.saveButton.setEnabled(0)
         QApplication.setOverrideCursor(Qt.WaitCursor)
+        start = time.time()
         generate(int(self.r_iters), self.r_step, self.r_scale, self.r_model, self.data_path, self, int(self.r_epochs))
+        end = time.time()
+        self.elapsed_time = end - start
         self.iterSlider.setEnabled(1)
         self.stepSlider.setEnabled(1)
         self.scaleSlider.setEnabled(1)
