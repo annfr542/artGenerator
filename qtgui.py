@@ -62,6 +62,7 @@ class QtGui(QMainWindow):
         self.data_path = noise_file
 
         self.feedback_label = self.findChild(QLabel, 'feedbackLabel')
+        self.rotate_check = self.findChild(QCheckBox, 'rotateImage')
 
         self.image_width = 1280
         self.image_height = 720
@@ -69,8 +70,8 @@ class QtGui(QMainWindow):
         self.iter_min = 20
         self.iter_max = 2000
 
-        self.step_min = 0.001
-        self.step_max = 0.1
+        self.step_min = 0.0001
+        self.step_max = 0.01
 
         self.scale_min = 1.1
         self.scale_max = 2.5
@@ -81,9 +82,10 @@ class QtGui(QMainWindow):
         self.model_dict = { "Slug": "model3.h5", 
                             "Buildings": "model_places.h5", 
                             "Blobs": "model_hybrid.h5",
-                            "Lighthouse": "model_places_flower_simple.h5" 
+                            "Lighthouse": "model_places_flower_simple.h5",
+                            "Bird Explosion": "classifier.h5"
         }
-        self.models = ["Slug", "Buildings", "Blobs", "Lighthouse"]
+        self.models = ["Slug", "Buildings", "Blobs", "Lighthouse", "Bird Explosion"]
         input_types = ["Noise", "Image"]
         self.current_type = InputType.NOISE
 
@@ -180,7 +182,7 @@ class QtGui(QMainWindow):
     def step_slider_change(self):
         value = self.stepSlider.value()
         nv = str(self.step_min + (self.step_max - self.step_min) * value / 99)
-        self.stepVal.setText(nv[0:5])
+        self.stepVal.setText(nv[0:6])
 
     def scale_slider_change(self):
         value = self.scaleSlider.value()
@@ -246,7 +248,7 @@ class QtGui(QMainWindow):
         self.saveButton.setEnabled(0)
         QApplication.setOverrideCursor(Qt.WaitCursor)
         start = time.time()
-        generate(int(self.r_iters), self.r_step, self.r_scale, self.r_model, self.data_path, self, self.r_octaves)
+        generate(int(self.r_iters), self.r_step, self.r_scale, self.r_model, self.data_path, self, self.r_octaves, self.rotate_check.isChecked())
         end = time.time()
         self.elapsed_time = end - start
         self.iterSlider.setEnabled(1)

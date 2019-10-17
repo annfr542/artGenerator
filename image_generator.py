@@ -22,6 +22,7 @@ layer_dict["model3.h5"] = ['conv2d_18', 'conv2d_19']
 layer_dict["model_places.h5"] = ['block4_pool', 'block5_pool']
 layer_dict["model_hybrid.h5"] = ['block4_pool', 'block5_pool']
 layer_dict["model_places_flower_simple.h5"] = ['block5_pool', 'max_pooling2d_1']
+layer_dict["classifier.h5"] = ['conv2d_2', 'conv2d_3']
 
 def deprocess(img):
     img = 255*(img + 1.0)/2.0
@@ -79,7 +80,7 @@ def load_image(path):
     img = np.array(img)
     return img
 
-def generate(iters, step, scale, model, image, gui, octaves):
+def generate(iters, step, scale, model, image, gui, octaves, rotate=0):
     base_model = load_model(model)
     original_img = load_image(image)
 
@@ -94,6 +95,8 @@ def generate(iters, step, scale, model, image, gui, octaves):
     for n in range(octaves):
         new_shape = tf.cast(base_shape*(scale**n), tf.int32)
         img = tf.image.resize(img, new_shape).numpy()
+        if rotate:
+            img=tf.image.rot90(img)
         img = run_deep_dream_simple(model=dream_model, img=img, gui=gui, steps=iters, step_size=step, octaves=n, tot_octaves=octaves)
 
     gui.set_output("Done")
