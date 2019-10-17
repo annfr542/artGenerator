@@ -71,7 +71,7 @@ class QtGui(QMainWindow):
         self.iter_max = 2000
 
         self.step_min = 0.0001
-        self.step_max = 0.01
+        self.step_max = 0.05
 
         self.scale_min = 1.1
         self.scale_max = 2.5
